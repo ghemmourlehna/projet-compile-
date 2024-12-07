@@ -5,16 +5,15 @@
 %}
 
 
-([-]?[1-9][0-9]*)|0 {return NUM;}
-([-]?[1-9][0-9]*[.][0]|[0]+[1-9]+|[1-9][0-9]*)|0|([-]?[1-9][0-9]*) {return REEL;}
-.{return TEXT;}
-[a-zA-Z][a-zA-Z0-9]*[_]?[a-zA-Z][a-zA-Z0-9]* {return ID;}
-[1-9][0-9]* {return TAILLE;}
-([-]?[1-9][0-9]*[.][0]|[0]+[1-9]+|[1-9][0-9]*)|0|([-]?[1-9][0-9]*) | ([-]?[1-9][0-9]*)|0 {return CONST;}
-\{.*?\} {retrun COM;}
---[^#]*## {return COM;}
+CHIFFRES [0-9]*
+LETTRES [a-zA-Z]*
 
-^\s*(\w+)\s*:\s*(\w+)\[(\d+)\]\s*;$  //tableau
+NUM ([-]?{CHIFFRES})|0 
+REEL ([-+]?{CHIFFRES}*[.]{CHIFFRES}*)|0
+TEXT {LETTRES}*
+ID [A-Z][{LETTRES}{CHIFFRES}_]* 
+CONST [{CHIFFRES}]*
+COM ([--].[##])|([{-].[-}])
 
 %%
 
@@ -68,6 +67,13 @@
 [ \t]  {    }
 
 \n {nb_ligne ++;}
+
+{NUM} {return mc_num;}
+{REEL} {return mc_reel;}
+{TEXT} {return mc_text;}
+{ID} {return mc_id;}
+{CONST} {return mc_const;}
+{COM} {    }
 
 .     {printf("erreur lexicale a la ligne %d \n",nb_ligne);}
 
