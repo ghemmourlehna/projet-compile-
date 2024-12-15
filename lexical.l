@@ -1,27 +1,31 @@
 %{
-    int nb_ligne=1;
+    int nb_ligne=1;  
+    char * mc_debut,*mc_fin,*mc_execution,* mc_fixe,*SI,*ALORS,*SINON,*TANTQUE,*FAIRE,*AFFICHE,*LIRE,*mc_num,*mc_reel,*mc_text,*mc_id,*mc_const,*AFF;
+    
+    #include "synt.tab.h"
+    #include "TS.h"
 
-    #include "syntaxique.tab.h"
+    #define YY_NO_UNPUT
 %}
 
 
-CHIFFRES [0-9]*
-LETTRES [a-zA-Z]*
+CHIFFRES [0-9]+
+LETTRES [a-zA-Z]+
 
-NUM ([-]?{CHIFFRES})|0 
-REEL ([-+]?{CHIFFRES}*[.]{CHIFFRES}*)|0
-TEXT {LETTRES}*
+NUM [-]?{CHIFFRES} 
+REEL [-+]?{CHIFFRES}*\.{CHIFFRES}*
+TEXT {LETTRES}+
 ID [A-Z][{LETTRES}{CHIFFRES}_]* 
 CONST [{CHIFFRES}]*
-COM ([--].[##])|([{-].[-}])
+COM ("--".*"##")|("{-".*"-}")
 
 %%
 
 
-"DEBUT" {return mc_debut;}
-"FIN" {return mc_fin;}
-"EXECUTION" {return mc_execution;}
-"FIXE" {return mc_fixe;}
+"Debut" {return mc_debut;}
+"Fin" {return mc_fin;}
+"Execution" {return mc_execution;}
+"Fixe" {return mc_fixe;}
 
 
 "Si" {return SI;}
@@ -31,11 +35,11 @@ COM ([--].[##])|([{-].[-}])
 "Faire" {return FAIRE;}
 
 
-"<-" {return "<-";}
+"<-" {return  AFF;}
 "!=" { return "!=";}
 ">" { return ">";}
 "<" { return "<";}
-"=" { return '=';}
+"=" { return "=";}
 ">=" {return ">=";}
 "<=" {return "<=";}
 
@@ -60,8 +64,8 @@ COM ([--].[##])|([{-].[-}])
 ":" {return ":";}
 
 
-"AFFICHE" {return AFFICHE;}
-"LIRE" {return LIRE;}
+"Affiche" {return AFFICHE;}
+"Lire" {return LIRE;}
 
 
 [ \t]  {    }
@@ -76,7 +80,6 @@ COM ([--].[##])|([{-].[-}])
 {COM} {    }
 
 .     {printf("erreur lexicale a la ligne %d \n",nb_ligne);}
-
 
 %%
 
